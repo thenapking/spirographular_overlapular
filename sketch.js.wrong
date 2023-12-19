@@ -1,0 +1,52 @@
+let speed=1/8;
+let t = 0;
+let sw = 0.85; //stroke weight
+let alf = 100;  //base alpha
+let density = 0.008;
+
+function draw_art(){
+  epicycloid(800, 51/10, 0, 0);
+  epicycloid(164, 10/10, 0, 0);
+}
+
+function epicycloid(a, q, x_c, y_c){
+  let b = a/q;
+  for(let th=0; th<three_sixty; th+=PI*density){
+    let x = b*cos(th)+x_c;
+    let y = b*sin(th)+y_c;
+    coloured_circle(x,y,a+b,th)
+  }
+}
+
+function coloured_circle(x,y,r,i){
+  //match the gradient with an unfilled circle
+  //angles must be in radians, irrespective of angleMode
+  drawingContext.strokeStyle = conic_gradient(x, y, i);
+  circle(x,y,r);
+}
+
+function conic_gradient(x, y, i){
+  // offset the angle a by 90 so that it starts at north and animate
+  let a = t-PI/2;
+  let gradient = drawingContext.createConicGradient(a, x, y);
+
+  gradient.addColorStop(0.00, color(255,0,0,alf)); //red 
+  gradient.addColorStop(0.15, color(255,165,0,alf*2)); //orange
+  gradient.addColorStop(0.25, color(255,255,0,alf)); //yellow
+  gradient.addColorStop(0.35, color(255,128,0,alf*1.5)); //green
+  gradient.addColorStop(0.65, color(0,0,255,alf*2)); //blue
+  gradient.addColorStop(1.00, color(255,0,0,alf)); //red 
+
+  return gradient
+}
+
+function setup_frame(){
+  blendMode(BLEND);
+  background(0);
+  translate(width/2, height/2);
+  t = frameCount * speed / PI;
+  blendMode(ADD);
+  noFill();
+  stroke(255)
+  strokeWeight(0.4);
+}
